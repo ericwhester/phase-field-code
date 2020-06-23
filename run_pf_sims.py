@@ -17,8 +17,8 @@ shandler = logging.StreamHandler()
 logger.addHandler(fhandler)
 logger.addHandler(shandler)
 
-for i in range(rank,len(eps)+1,size):
-    print(f'rank {i} sim starting:')
+for i in range(rank,len(eps),size):
+    print(f'rank {rank} sim starting:')
     sb.run_salty_boussinesq_vpf(simnames[i],eps[i],dts[i],comms,logger)
 
 for handler in logger.handlers:

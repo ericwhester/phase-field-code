@@ -39,7 +39,7 @@ def run_salty_boussinesq_vpf(simname,ϵ,dt,comm,logger):
     #dt = float(sys.argv[2])#2e-4
     timestepper = 'SBDF2'
     #simname = f'salty-boussinesq-melting-vpf-tangent-{timestepper}-{ϵ:.0e}-conserved-passive'
-    if rank == 0: flt.makedir(f'{savedir}/frames/{simname}')
+    flt.makedir(f'{savedir}/frames/{simname}')
     tend = 10
     save_step = 1
     save_freq = round(save_step/dt)
@@ -50,7 +50,7 @@ def run_salty_boussinesq_vpf(simname,ϵ,dt,comm,logger):
     zb2 = de.Chebyshev('z2',32,interval=(1-10*ϵ,1),dealias=3/2)
     zbasis = de.Compound('z',[zb0,zb1,zb2])
     domain = de.Domain([xbasis,zbasis],grid_dtype=np.float64,comm=comm)
-    if rank==0: flt.save_domain(f'{savedir}/domain-{simname}.h5',domain)
+    flt.save_domain(f'{savedir}/domain-{simname}.h5',domain)
     x, z = domain.grids(scales=domain.dealias)
     xx,zz = x+0*z, 0*x+z
     xc = xx
