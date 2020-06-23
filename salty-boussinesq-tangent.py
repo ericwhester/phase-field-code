@@ -21,7 +21,7 @@ rank,size = comm.rank,comm.size
 
 J, K, g, G, Kdet, eps = rm.J, rm.K, rm.g, rm.G, rm.Kdet, rm.eps
 
-savedir = './domain-remapping'
+savedir = './salty-boussinesq-melting'
 
 ν = 1e-2
 κ = 1e-2
@@ -35,7 +35,7 @@ nz = 64
 dt = 1e-3
 timestepper = 'SBDF2'
 simname = f'salty-boussinesq-melting-tangent-conserved-passive'
-restart = True
+restart = False
 if rank == 0: flt.makedir(f'{savedir}/frames/{simname}')
 tend = 10
 save_step = 1
@@ -182,12 +182,12 @@ if restart:
     
 analysis = solver.evaluator.add_file_handler(f'{savedir}/analysis-{simname}',iter=save_freq, max_writes=100)
 for task in problem.variables + ['zc1','zc2']: analysis.add_task(task)
+for l in '2':
+    for name in ['div','vorticity','ux','uz','pr','kenergy','dtux','dtuz']:
+        analysis.add_task(name+l)
 
 interface = solver.evaluator.add_file_handler(f'{savedir}/interface-{simname}',iter=int(round(.01/dt)), max_writes=2001)
 for task in ['h','ht','E','S']: interface.add_task(task)
-for l in '2':
-    for name in ['div','vorticity','zc','ux','uz','pr','kenergy','dtux','dtuz']:
-        analysis.add_task(name+l)
 
 start_time = time.time()
 while solver.ok:
